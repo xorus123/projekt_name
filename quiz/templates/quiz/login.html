@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Вхід - QuizApp</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .auth-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 350px; }
+        h2 { text-align: center; color: #4f46e5; margin-bottom: 20px; }
+        form p { margin-bottom: 15px; }
+        form label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px; }
+        form input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #4f46e5; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 500; margin-top: 10px; }
+        button:hover { background-color: #4338ca; }
+        .links { text-align: center; margin-top: 15px; font-size: 14px; }
+        .links a { color: #4f46e5; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <h2>Вхід</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Увійти</button>
+        </form>
+        <div class="links">
+            <p>Ще немає акаунта? <a href="{% url 'register' %}">Зареєструватися</a></p>
+        </div>
+    </div>
+</body>
+</html>

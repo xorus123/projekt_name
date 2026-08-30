@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Головна - Онлайн Вікторини</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4f46e5;
+            text-decoration: none;
+        }
+
+        .auth-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .auth-buttons a {
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+
+        .btn-login {
+            color: #4f46e5;
+            border: 1px solid #4f46e5;
+        }
+
+        .btn-register {
+            background-color: #4f46e5;
+            color: white;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            color: white;
+        }
+
+        .hero-section h1 {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .hero-section p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .search-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .search-container input {
+            width: 400px;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .search-container button, .btn-create {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .search-container button:hover, .btn-create:hover {
+            background-color: #059669;
+        }
+
+        .actions-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="{% url 'index' %}" class="logo">QuizApp</a>
+        <div class="auth-buttons">
+            {% if user.is_authenticated %}
+                <span style="font-weight: 500; margin-right: 15px; color: #333;">Привіт, {{ user.username }}!</span>
+                <a href="{% url 'logout' %}" class="btn-login">Вийти</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-login">Увійти</a>
+                <a href="{% url 'register' %}" class="btn-register">Зареєструватися</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <h1>Знайди свою улюблену вікторину або створи нову!</h1>
+        <p>Перевір свої знання або змагайся з друзями.</p>
+        
+        <div class="search-container">
+            <input type="text" placeholder="Пошук вікторин...">
+            <button type="button">Шукати</button>
+        </div>
+
+        <div class="actions-container">
+            <a href="#" class="btn-create">+ Створити вікторину</a>
+        </div>
+    </section>
+
+</body>
+</html>
