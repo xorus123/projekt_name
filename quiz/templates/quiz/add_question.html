@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Додати питання — {{ quiz.title }}</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --accent-green: #10b981;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+            --list-bg: #f8fafc;
+        }
+
+        [data-theme="dark"] {
+            --primary: #818cf8;
+            --accent-green: #34d399;
+            --bg-body: #0f172a;
+            --card-bg: #1e293b;
+            --text-dark: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #0f172a;
+            --list-bg: #0f172a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        body { background-color: var(--bg-body); color: var(--text-dark); min-height: 100vh; padding-bottom: 40px; animation: fadeIn 0.5s ease-out; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        header { background: var(--card-bg); padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 22px; font-weight: 800; color: var(--primary); text-decoration: none; }
+        .theme-toggle-btn { background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-dark); width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+
+        .container { max-width: 600px; margin: 40px auto; padding: 0 20px; animation: slideUp 0.5s ease-out; }
+        .card { background: var(--card-bg); padding: 32px; border-radius: 18px; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        h2 { color: var(--accent-green); margin-bottom: 5px; }
+
+        form p { margin-bottom: 12px; }
+        form label { display: block; margin-bottom: 4px; font-weight: 700; font-size: 14px; }
+        form input, form select { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--text-dark); outline: none; }
+
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-add { flex: 1; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; }
+        .btn-finish { flex: 1; padding: 12px; background: var(--accent-green); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; }
+
+        .questions-list { background: var(--list-bg); padding: 15px; border-radius: 10px; border: 1px solid var(--border-color); }
+        .q-item { background: var(--card-bg); padding: 10px 15px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border-color); }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{% url 'index' %}" class="logo">🎯 QuizApp</a>
+        <button id="themeToggle" class="theme-toggle-btn">🌙</button>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Додати питання</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Вікторина: <b>{{ quiz.title }}</b></p>
+            
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="btn-group">
+                    <button type="submit" name="add_another" class="btn-add">+ Додати ще питання</button>
+                    <button type="submit" name="finish" class="btn-finish">Завершити</button>
+                </div>
+            </form>
+        </div>
+
+        {% if questions %}
+        <div class="card">
+            <h3>Додані питання ({{ questions.count }}):</h3>
+            <div class="questions-list" style="margin-top: 10px;">
+                {% for q in questions %}
+                    <div class="q-item">
+                        <b>{{ forloop.counter }}. {{ q.text }}</b>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const btn = document.getElementById('themeToggle');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            btn.textContent = '☀️';
+        }
+        btn.addEventListener('click', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            btn.textContent = isDark ? '🌙' : '☀️';
+        });
+    </script>
+</body>
+</html>

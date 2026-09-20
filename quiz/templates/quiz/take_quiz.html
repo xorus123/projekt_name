@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проходження: {{ quiz.title }}</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --accent-green: #10b981;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --question-bg: #f8fafc;
+        }
+
+        [data-theme="dark"] {
+            --primary: #818cf8;
+            --accent-green: #34d399;
+            --bg-body: #0f172a;
+            --card-bg: #1e293b;
+            --text-dark: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --question-bg: #0f172a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        body { background-color: var(--bg-body); color: var(--text-dark); min-height: 100vh; padding-bottom: 50px; animation: fadeIn 0.5s ease-out; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        header { background: var(--card-bg); padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 22px; font-weight: 800; color: var(--primary); text-decoration: none; }
+        .theme-toggle-btn { background: var(--question-bg); border: 1px solid var(--border-color); color: var(--text-dark); width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+
+        .container { max-width: 680px; margin: 40px auto; padding: 0 20px; animation: slideUp 0.5s ease-out; }
+        .card { background: var(--card-bg); padding: 32px; border-radius: 18px; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        h2 { color: var(--primary); margin-bottom: 24px; font-size: 26px; }
+
+        .question { margin-bottom: 20px; padding: 20px; background: var(--question-bg); border-radius: 12px; border: 1px solid var(--border-color); }
+        .question-title { font-weight: 700; margin-bottom: 14px; font-size: 16px; color: var(--text-dark); }
+        
+        .option-label { display: flex; align-items: center; padding: 10px 14px; margin-bottom: 8px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .option-label:hover { border-color: var(--primary); transform: translateX(3px); }
+        .option-label input { margin-right: 12px; accent-color: var(--primary); }
+
+        .btn-submit { width: 100%; padding: 14px; background: var(--accent-green); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 700; margin-top: 10px; transition: transform 0.2s, background-color 0.2s; }
+        .btn-submit:hover { transform: translateY(-2px); opacity: 0.95; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{% url 'index' %}" class="logo">🎯 QuizApp</a>
+        <button id="themeToggle" class="theme-toggle-btn">🌙</button>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>{{ quiz.title }}</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {% for q in questions %}
+                    <div class="question">
+                        <div class="question-title">{{ forloop.counter }}. {{ q.text }}</div>
+                        <label class="option-label"><input type="radio" name="question_{{ q.id }}" value="1" required> {{ q.option1 }}</label>
+                        <label class="option-label"><input type="radio" name="question_{{ q.id }}" value="2"> {{ q.option2 }}</label>
+                        <label class="option-label"><input type="radio" name="question_{{ q.id }}" value="3"> {{ q.option3 }}</label>
+                        <label class="option-label"><input type="radio" name="question_{{ q.id }}" value="4"> {{ q.option4 }}</label>
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn-submit">Завершити тест ✨</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('themeToggle');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            btn.textContent = '☀️';
+        }
+        btn.addEventListener('click', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            btn.textContent = isDark ? '🌙' : '☀️';
+        });
+    </script>
+</body>
+</html>

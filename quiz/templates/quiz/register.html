@@ -2,32 +2,74 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Реєстрація - QuizApp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реєстрація — QuizApp</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .auth-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 350px; }
-        h2 { text-align: center; color: #4f46e5; margin-bottom: 20px; }
+        :root {
+            --primary: #6366f1;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+        }
+        [data-theme="dark"] {
+            --primary: #818cf8;
+            --bg-body: #0f172a;
+            --card-bg: #1e293b;
+            --text-dark: #f8fafc;
+            --border-color: #334155;
+            --input-bg: #0f172a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        body { background-color: var(--bg-body); color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        header { background: var(--card-bg); padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 22px; font-weight: 800; color: var(--primary); text-decoration: none; }
+        .theme-toggle-btn { background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-dark); width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+        .container { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .card { background: var(--card-bg); padding: 36px; border-radius: 18px; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%; max-width: 360px; }
+        h2 { text-align: center; color: var(--primary); margin-bottom: 20px; }
         form p { margin-bottom: 15px; }
-        form label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px; }
-        form input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        .helptext { font-size: 11px; color: #666; display: block; margin-top: 4px; }
-        button { width: 100%; padding: 10px; background-color: #4f46e5; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 500; margin-top: 10px; }
-        button:hover { background-color: #4338ca; }
+        form label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: 600; }
+        form input { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--text-dark); outline: none; }
+        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 700; margin-top: 10px; }
         .links { text-align: center; margin-top: 15px; font-size: 14px; }
-        .links a { color: #4f46e5; text-decoration: none; }
+        .links a { color: var(--primary); text-decoration: none; }
     </style>
 </head>
 <body>
-    <div class="auth-card">
-        <h2>Реєстрація</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Зареєструватися</button>
-        </form>
-        <div class="links">
-            <p>Вже є акаунт? <a href="{% url 'login' %}">Увійти</a></p>
+    <header>
+        <a href="{% url 'index' %}" class="logo">🎯 QuizApp</a>
+        <button id="themeToggle" class="theme-toggle-btn">🌙</button>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Реєстрація</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Створити акаунт</button>
+            </form>
+            <div class="links">
+                <p>Вже є акаунт? <a href="{% url 'login' %}">Увійти</a></p>
+            </div>
         </div>
     </div>
+
+    <script>
+        const btn = document.getElementById('themeToggle');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            btn.textContent = '☀️';
+        }
+        btn.addEventListener('click', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            btn.textContent = isDark ? '🌙' : '☀️';
+        });
+    </script>
 </body>
 </html>

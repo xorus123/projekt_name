@@ -3,39 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вхід — QuizApp</title>
+    <title>Твій результат</title>
     <style>
         :root {
             --primary: #6366f1;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
             --bg-body: #f8fafc;
             --card-bg: #ffffff;
             --text-dark: #0f172a;
+            --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --input-bg: #ffffff;
         }
+
         [data-theme="dark"] {
             --primary: #818cf8;
+            --accent-green: #34d399;
             --bg-body: #0f172a;
             --card-bg: #1e293b;
             --text-dark: #f8fafc;
+            --text-muted: #94a3b8;
             --border-color: #334155;
-            --input-bg: #0f172a;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background-color 0.3s, color 0.3s; }
-        body { background-color: var(--bg-body); color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; animation: fadeIn 0.5s ease-out; }
+        body { background-color: var(--bg-body); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; animation: fadeIn 0.5s ease-out; }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
         header { background: var(--card-bg); padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
         .logo { font-size: 22px; font-weight: 800; color: var(--primary); text-decoration: none; }
         .theme-toggle-btn { background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-dark); width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+
         .container { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .card { background: var(--card-bg); padding: 36px; border-radius: 18px; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%; max-width: 360px; }
-        h2 { text-align: center; color: var(--primary); margin-bottom: 20px; }
-        form p { margin-bottom: 15px; }
-        form label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: 600; }
-        form input { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--text-dark); outline: none; }
-        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 700; margin-top: 10px; }
-        .links { text-align: center; margin-top: 15px; font-size: 14px; }
-        .links a { color: var(--primary); text-decoration: none; }
+        .card { background: var(--card-bg); padding: 40px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; width: 100%; max-width: 420px; animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+        .score-box { font-size: 54px; font-weight: 800; color: var(--accent-green); margin: 15px 0; }
+        .btn { display: block; padding: 12px; border-radius: 10px; text-decoration: none; font-weight: 700; margin-top: 10px; transition: transform 0.2s; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-leader { background: var(--accent-orange); color: white; }
+        .btn-home { background: var(--primary); color: white; }
     </style>
 </head>
 <body>
@@ -46,15 +54,12 @@
 
     <div class="container">
         <div class="card">
-            <h2>Вхід у систему</h2>
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Увійти</button>
-            </form>
-            <div class="links">
-                <p>Ще немає акаунта? <a href="{% url 'register' %}">Зареєструватися</a></p>
-            </div>
+            <h2>Результат тестування</h2>
+            <div class="score-box">{{ result.score }} / {{ result.total_questions }}</div>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Вікторина: <b>{{ result.quiz.title }}</b></p>
+            
+            <a href="{% url 'leaderboard' result.quiz.id %}" class="btn btn-leader">🏆 Переглянути лідерів</a>
+            <a href="{% url 'index' %}" class="btn btn-home">На головну</a>
         </div>
     </div>
 
